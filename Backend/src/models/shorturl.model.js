@@ -1,30 +1,29 @@
 const mongoose = require("mongoose");
 
+// Define the schema for shortened URLs
 const shortUrlSchema = new mongoose.Schema(
   {
     originalUrl: {
       type: String,
-      required: true
+      required: true,
     },
     shortId: {
       type: String,
       required: true,
-      index: true,
-      unique: true, 
+      unique: true,
     },
     clicks: {
       type: Number,
-      required: true,
-      
-      default: 0
+      default: 0,
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true``
-    }
-  },                                                       //schema
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
+  },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("ShortUrl", shortUrlSchema);            //model
+// Create and export the ShortUrl model
+module.exports = mongoose.model("ShortUrl", shortUrlSchema);

@@ -1,30 +1,27 @@
 const express = require("express");
 const app = express();
-const ShortUrl = require("./src/models/shorturl.model");
 
-const { nanoid } = require("nanoid");
-const shortId = nanoid(7);
-
-require("dotenv").config();
 const connectDB = require("./src/mongo.config");
-connectDB();
+const shortUrlRoute = require("./src/routes/shortUrl.route");
 
+// Load environment variables
+require("dotenv").config();
+
+// Body-parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post("/api/create", async(req, res) => {
-    const { url } = req.body;
-    const shortId = nanoid(7);
-    const newUrl = new ShortUrl({
-      originalUrl: url,
-      shortId: shortId
-    });
+// Mount URL shortening routes
+app.use("/", shortUrlRoute);
 
-    await newUrl.save();
-
-    res.send(shortId);
+// Home route
+app.get("/", (req, res) => {
+  res.send("Hai Ho prabhu");
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+// Connect to MongoDB before starting the server
+connectDB().then(() => {
+  app.listen(3000, () => {
+    console.log("Server running on port 3000");
+  });
 });
